@@ -52,28 +52,8 @@ public class CarService {
         } else {
             throw new CarNotFoundException();
         }
-
-        /**
-         *   Use the Pricing Web client you create in `VehiclesApiApplication`
-         *   to get the price based on the `id` input'
-         *   Set the price of the car
-         *   Note: The car class file uses @transient, meaning you will need to call
-         *   the pricing service each time to get the price.
-         */
-
         car.setPrice(priceClient.getPrice(id));
-
-        /**
-         *   Use the Maps Web client you create in `VehiclesApiApplication`
-         *   to get the address for the vehicle. Access the location
-         *   from the car object and feed it to the Maps service.
-         *  Set the location of the vehicle, including the address information
-         *  Note: The Location class file also uses @transient for the address,
-         *  meaning the Maps service needs to be called each time for the address.
-         */
-
         car.setLocation(mapsClient.getAddress(car.getLocation()));
-
         return car;
     }
 
@@ -100,16 +80,13 @@ public class CarService {
      * @param id the ID number of the car to delete
      */
     public void delete(Long id) {
-        /**
-         * TODO: Find the car by ID from the `repository` if it exists.
-         *   If it does not exist, throw a CarNotFoundException
-         */
-
-
-        /**
-         * TODO: Delete the car from the repository.
-         */
-
-
+        Car car = null;
+        Optional<Car> foundCar = repository.findById(id);
+        if(foundCar.isPresent()){
+            car = foundCar.get();
+        } else {
+            throw new CarNotFoundException();
+        }
+        repository.delete(car);
     }
 }
