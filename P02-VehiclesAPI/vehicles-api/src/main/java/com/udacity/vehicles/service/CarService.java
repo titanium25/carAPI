@@ -41,17 +41,7 @@ public class CarService {
      * @return the requested car's information, including location and price
      */
     public Car findById(Long id) {
-        /**
-         *   Find the car by ID from the `repository` if it exists.
-         *   If it does not exist, throw a CarNotFoundException.
-         */
-        Car car = null;
-        Optional<Car> foundCar = repository.findById(id);
-        if(foundCar.isPresent()){
-            car = foundCar.get();
-        } else {
-            throw new CarNotFoundException();
-        }
+        Car car = repository.findById(id).orElseThrow(CarNotFoundException::new);
         car.setPrice(priceClient.getPrice(id));
         car.setLocation(mapsClient.getAddress(car.getLocation()));
         return car;
@@ -71,7 +61,6 @@ public class CarService {
                         return repository.save(carToBeUpdated);
                     }).orElseThrow(CarNotFoundException::new);
         }
-
         return repository.save(car);
     }
 
@@ -80,13 +69,7 @@ public class CarService {
      * @param id the ID number of the car to delete
      */
     public void delete(Long id) {
-        Car car = null;
-        Optional<Car> foundCar = repository.findById(id);
-        if(foundCar.isPresent()){
-            car = foundCar.get();
-        } else {
-            throw new CarNotFoundException();
-        }
+        Car car = repository.findById(id).orElseThrow(CarNotFoundException::new);
         repository.delete(car);
     }
 }
